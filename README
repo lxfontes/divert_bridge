@@ -1,0 +1,30 @@
+Userland bridge, exposing full packet contents for analysis.
+Can be used with one ( single arm ) or two interfaces ( normal ).
+
+Basic setup:
+Create two bridge interfaces, combining one real interface and one tap ( virtual ) interface. Ex:
+
+brctl addbr br0
+brctl addif br0 eth0
+brctl addif br0 tap0
+
+brctl addbr br1
+brctl addif br1 eth1
+brctl addif br1 tap1
+
+Bring all interfaces up
+ifconfig tap1 up
+ifconfig tap0 up
+ifconfig eth0 up
+ifconfig eth1 up
+ifconfig br0 up
+ifconfig br1 up
+
+
+Packet Flow:
+Using the example above, packets coming on eth0 will be read by tap0, analyzed to script engine and sent out to tap1, reaching eth1.
+
+eth0->tap0->script_engine->tap1->eth1
+[   br0   ]               [   br1   ]
+
+
